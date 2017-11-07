@@ -1,0 +1,19 @@
+{
+  "name": "1dr-utils",
+  "version": "0.0.1",
+  "description": "Various javascript utilities, prepped for use with browserify or anything that uses npm modules",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onedarnleyroad/jsutils.git"
+  },
+  "author": "One Darnley Road",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/onedarnleyroad/jsutils/issues"
+  },
+  "homepage": "https://github.com/onedarnleyroad/jsutils#readme"
+}
