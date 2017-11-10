@@ -4,7 +4,7 @@
   "description": "Various javascript utilities, prepped for use with browserify or anything that uses npm modules",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "browserify tests/compile.js -o build/compile.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/onedarnleyroad/jsutils/issues"
   },
-  "homepage": "https://github.com/onedarnleyroad/jsutils#readme"
+  "homepage": "https://github.com/onedarnleyroad/jsutils#readme",
+  "dependencies": {
+    "extend": "^3.0.1",
+    "promise-polyfill": "^6.0.2",
+    "velocity-animate": "^1.5.0"
+  }
 }
