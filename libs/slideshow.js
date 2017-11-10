@@ -328,11 +328,22 @@ Slide.prototype.pan = function( isStart ) {
 =            SlideShow Object            =
 ========================================*/
 
-const Slideshow = function( selector, options ) {
+const Slideshow = function( options ) {
     var self = this;
 
     // Find the elements:
-    var slideElements = document.querySelectorAll( selector );
+
+    // Find the container
+
+
+    var container = document.querySelector( options.container );
+
+    if (!container) {
+        return false;
+    }
+
+    // Find the children
+    var slideElements = container.querySelectorAll( options.slide );
 
     // If none, no point doing anything else
     if (slideElements.length === 0) {
