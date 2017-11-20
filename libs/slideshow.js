@@ -330,6 +330,7 @@ Slide.prototype.pan = function( isStart ) {
 
 const Slideshow = function( options ) {
     var self = this;
+    self.ready = false;
 
     // Find the elements:
 
@@ -395,6 +396,7 @@ const Slideshow = function( options ) {
     // as it will be the last slide, so store that now:
     self.slides[0].prev = self.slides[ self.slides.length - 1];
 
+    // Allow apps to say it worked.
     self.ready = true;
 
     return self;
