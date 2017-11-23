@@ -1,6 +1,6 @@
 {
   "name": "1dr-utils",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Various javascript utilities, prepped for use with browserify or anything that uses npm modules",
   "main": "index.js",
   "scripts": {
