@@ -5,17 +5,20 @@ module.exports = (function(w) {
     // usage:
     /*
         Defaults are in place, so:
-        desktop: { min: 1367 },
-        laptop: { max: 1366 },
-        tablet: { max: 1024 },
-        mobile: { max: 480 },
+
+        (units are necessary, you can use EM if you want)
+
+        desktop: {  min:  "1367px" },
+        laptop:  {  max:  "1366px" },
+        tablet:  {  max:  "1024px" },
+        mobile:  {  max:  "480px" },
 
         is already set, but can be overriden or added to when initialising
 
         var media = new MediaQueries({
-            desktop: { min: 1920 },
-            sidebar: { max: 1300 },
-            tablet-only: { max: 1024, min: 480 }
+            desktop: { "1441px"}, ( min width )
+            sidebar: { max: "1300px" },
+            tablet-only: { max: "1024px", min: "480px" }
         });
 
         // true when window is max-width 1300px, false otherwise
@@ -32,30 +35,31 @@ module.exports = (function(w) {
     var mq = ('matchMedia' in window);
 
     var _maxWidth = function( size, unit ) {
-
-        unit = unit || 'px';
-
-        if (mq) {
-            return ( window.matchMedia('(max-width: ' + size + unit + ')').matches );
-        } else {
-            return ( window.innerWidth <= size );
-        }
+        return ( window.matchMedia('(max-width: ' + size + unit + ')').matches );
     };
 
     var _minWidth = function( size, unit ) {
-        if (mq) {
-            return ( window.matchMedia('(min-width: ' + size + unit + ')').matches );
-        } else {
-            return ( window.innerWidth > size );
-        }
+        return ( window.matchMedia('(min-width: ' + size + unit + ')').matches );
     };
 
     var MediaQueries = function( config ) {
+
+        if (!mq) {
+            console.error("matchMedia not supported on this browser");
+            return false;
+        }
+
+        for ( var prop in config ) {
+            if ( typeof config[prop] === "string" ) {
+                config[prop] = { min: config[prop] }
+            }
+        }
+
         var defaults = {
-            desktop: { min: 1367, unit: 'px' },
-            laptop: { max: 1366, unit: 'px' },
-            tablet: { max: 1024, unit: 'px' },
-            mobile: { max: 480, unit: 'px' },
+            desktop: {  min:  "1367px" },
+            laptop:  {  max:  "1366px" },
+            tablet:  {  max:  "1024px" },
+            mobile:  {  max:  "480px" },
         };
         this.breakpoints = config || defaults;
         return this;
@@ -70,27 +74,19 @@ module.exports = (function(w) {
             var rule = this.breakpoints[ keyword ];
         }
 
-
-
         if (!rule) { return -1; }
-
-        var unit = 'px';
-
-        if (rule.hasOwnProperty('unit')) {
-            unit = rule.unit;
-        }
 
         if (rule.hasOwnProperty( 'max' )) {
 
 
-            if (!_maxWidth( rule.max, unit )) {
+            if (!_maxWidth( rule.max )) {
                 return false;
             }
         }
 
         if (rule.hasOwnProperty( 'min' )) {
 
-            if (!_minWidth( rule.min, unit )) {
+            if (!_minWidth( rule.min )) {
                 return false;
             }
         }
