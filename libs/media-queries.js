@@ -34,29 +34,29 @@ module.exports = (function(w) {
     // if not use plain old jQuery window size.
     var mq = ('matchMedia' in window);
 
-    var _maxWidth = function( size ) {
-        return ( window.matchMedia('(max-width: ' + size + ')').matches );
-    };
-
-    var _minWidth = function( size ) {
-        return ( window.matchMedia('(min-width: ' + size + ')').matches );
-    };
-
-    var _withinWidth = function( min, max ) {
-        return ( window.matchMedia('(min-width: ' + min + ') and (max-width: ' + max + ')').matches );
+    var _matchRule = function( rule, debug ) {
+        let matches = window.matchMedia( rule ).matches;
+        if (debug) { console.log( rule, matches ? "Matches" : "NO" ); }
+        return matches;
     }
 
-    var MediaQueries = function( config ) {
+    var _maxWidth = function( size, debug ) {
+        return _matchRule( '(max-width: ' + size + ')', debug );
+    };
+
+    var _minWidth = function( size, debug ) {
+        return _matchRule( '(min-width: ' + size + ')', debug );
+    };
+
+    var _withinWidth = function( min, max, debug ) {
+        return _matchRule( '(min-width: ' + min + ') and (max-width: ' + max + ')', debug );
+    }
+
+    var MediaQueries = function( config, debug ) {
 
         if (!mq) {
             console.error("matchMedia not supported on this browser");
             return false;
-        }
-
-        for ( var prop in config ) {
-            if ( typeof config[prop] === "string" ) {
-                config[prop] = { min: config[prop] }
-            }
         }
 
         var defaults = {
@@ -69,7 +69,7 @@ module.exports = (function(w) {
         return this;
     };
 
-    MediaQueries.prototype.matches = function( keyword ) {
+    MediaQueries.prototype.matches = function( keyword, debug ) {
 
         if (typeof keyword === 'object') {
             // rely on user to use correct notation
@@ -82,25 +82,32 @@ module.exports = (function(w) {
 
         var _return = false;
 
-
         var _try = function( query ) {
 
+
             if (query.hasOwnProperty( 'max' ) && query.hasOwnProperty( 'min') ) {
-                return _withinWidth( query.min, query.max );
-            } else if (rule.hasOwnProperty( 'min' )) {
-                return _minWidth( rule.min );
-            } else if (rule.hasOwnProperty( 'max')) {
-                return _maxWidth( rule.min );
+                return _withinWidth( query.min, query.max, debug );
+            } else if (query.hasOwnProperty( 'min' )) {
+                return _minWidth( query.min, debug );
+            } else if (query.hasOwnProperty( 'max')) {
+                return _maxWidth( query.min, debug );
+            } else if ( typeof query === "string" ) {
+                return _minWidth( query, debug );
             } else {
-                return true; // ??
+                return true; // ?
             }
+
         };
 
         if ( Array.isArray( rule ) ) {
             rule.forEach( function( _rule ) {
+
                 // only set it to true, don't ever
                 // set a true back to a false.
-                _return = (!_return) ? _try( _rule ) : _return;
+                if ( _try( _rule ) ) {
+                    _return = true;
+                }
+
             });
         }  else {
             _return = _try( rule );
