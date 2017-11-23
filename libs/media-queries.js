@@ -34,13 +34,17 @@ module.exports = (function(w) {
     // if not use plain old jQuery window size.
     var mq = ('matchMedia' in window);
 
-    var _maxWidth = function( size, unit ) {
-        return ( window.matchMedia('(max-width: ' + size + unit + ')').matches );
+    var _maxWidth = function( size ) {
+        return ( window.matchMedia('(max-width: ' + size + ')').matches );
     };
 
-    var _minWidth = function( size, unit ) {
-        return ( window.matchMedia('(min-width: ' + size + unit + ')').matches );
+    var _minWidth = function( size ) {
+        return ( window.matchMedia('(min-width: ' + size + ')').matches );
     };
+
+    var _withinWidth = function( min, max ) {
+        return ( window.matchMedia('(min-width: ' + min + ') and (max-width: ' + max + ')').matches );
+    }
 
     var MediaQueries = function( config ) {
 
@@ -76,23 +80,35 @@ module.exports = (function(w) {
 
         if (!rule) { return -1; }
 
-        if (rule.hasOwnProperty( 'max' )) {
+        var _return = false;
 
 
-            if (!_maxWidth( rule.max )) {
-                return false;
+        var _try = function( query ) {
+
+            if (query.hasOwnProperty( 'max' ) && query.hasOwnProperty( 'min') ) {
+                return _withinWidth( query.min, query.max );
+            } else if (rule.hasOwnProperty( 'min' )) {
+                return _minWidth( rule.min );
+            } else if (rule.hasOwnProperty( 'max')) {
+                return _maxWidth( rule.min );
+            } else {
+                return true; // ??
             }
+        };
+
+        if ( Array.isArray( rule ) ) {
+            rule.forEach( function( _rule ) {
+                // only set it to true, don't ever
+                // set a true back to a false.
+                _return = (!_return) ? _try( _rule ) : _return;
+            });
+        }  else {
+            _return = _try( rule );
         }
 
-        if (rule.hasOwnProperty( 'min' )) {
+        // At this point if anything hit, then _return will be true;;
+        return _return;
 
-            if (!_minWidth( rule.min )) {
-                return false;
-            }
-        }
-
-        // we got this far, must match!
-        return true;
 
     };
 
