@@ -40,7 +40,7 @@ docReadyDeferred.prototype.q = function( fn ) {
 };
 
 // run when bundle is ready, inside doc ready.
-docReadyDeferred.prototype.r = functioneady( fn ) {
+docReadyDeferred.prototype.ready = function( fn ) {
 
     if ( this.resolved ) {
         _$(function() {
@@ -53,7 +53,7 @@ docReadyDeferred.prototype.r = functioneady( fn ) {
 
 // Can have a think about what we'd
 // like to pass to the function
-docReadyDeferred.prototype.r = functionun( status ) {
+docReadyDeferred.prototype.run = function( status ) {
 
     // If a function got queued after
     // the first run, then we can test
@@ -73,7 +73,7 @@ docReadyDeferred.prototype.r = functionun( status ) {
     });
 };
 
-docReadyDeferred.prototype.i = functionnit() {
+docReadyDeferred.prototype.init = function() {
     // this will resolve the promise, and kick everything off.
     // this isn't actually needed but it's a placeholder if we need
     // several async scripts to resolve together, i.e. if we go a multiple
