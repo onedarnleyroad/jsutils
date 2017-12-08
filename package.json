@@ -18,7 +18,7 @@
   "homepage": "https://github.com/onedarnleyroad/jsutils#readme",
   "dependencies": {
     "extend": "^3.0.1",
-    "promise-polyfill": "^6.0.2",
+    "promise-polyfill": "^6.1.0",
     "velocity-animate": "^1.5.0"
   }
 }
