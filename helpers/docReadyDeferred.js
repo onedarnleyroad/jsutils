@@ -1,4 +1,7 @@
 
+// New version, promise free.
+// This will need adapting if we have to run several that depend on each other, eg promise all,
+// but at that point we are maybe better off using loadjs.
 
 const _$ = function(fn) {
     if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading"){
@@ -8,26 +11,12 @@ const _$ = function(fn) {
     }
 };
 
-// create deferred equivelent.
-window.Deferred = function() {
-    var _this = this;
-    this.resolve = null;
-    this.reject = null;
-
-    this.promise = new Promise(function(r, rj) {
-        this.resolve = r;
-        this.reject = rj;
-    }.bind(this));
-};
-
-
 
 // allow other scripts to store functions that will execute
 // when bundles is ready:
-var docReadyDeferred = function() {
+var docReadyDeferred = function( pathToPolyfill ) {
     this._fns = [];
     this._dr = [];
-    this.promise = new Deferred();
     this.resolved = false;
 };
 
@@ -73,20 +62,8 @@ docReadyDeferred.prototype.run = function( status ) {
     });
 };
 
-docReadyDeferred.prototype.init = function() {
-    // this will resolve the promise, and kick everything off.
-    // this isn't actually needed but it's a placeholder if we need
-    // several async scripts to resolve together, i.e. if we go a multiple
-    // parallel route.
-    this.resolve();
-
-};
 
 
-// Set a deferred promise...
-var p = new Deferred();
-p.promise.then(function() {
-    docReadyDeferred.run();
-});
+
 
 module.exports = docReadyDeferred;
