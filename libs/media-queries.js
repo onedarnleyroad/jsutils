@@ -90,7 +90,7 @@ module.exports = (function(w) {
             } else if (query.hasOwnProperty( 'min' )) {
                 return _minWidth( query.min, debug );
             } else if (query.hasOwnProperty( 'max')) {
-                return _maxWidth( query.min, debug );
+                return _maxWidth( query.max, debug );
             } else if ( typeof query === "string" ) {
                 return _minWidth( query, debug );
             } else {
