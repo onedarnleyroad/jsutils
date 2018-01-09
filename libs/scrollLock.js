@@ -71,7 +71,7 @@ var _init = function( scrollerEl, _scrollJacker ) {
 
             _scrollJacker.locked && // our scrolling is locked AND
             ( ev.target != scrollerEl ) && // our target is NOT the scroller AND
-            !aContainsB( scrollerEl[0], ev.target ) && // our target is NOT a CHILD of the scroller AND
+            !aContainsB( scrollerEl, ev.target ) && // our target is NOT a CHILD of the scroller AND
             !isInExclusions // the target is not also in our exclusions list.
         );
 
