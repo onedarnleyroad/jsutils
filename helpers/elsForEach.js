@@ -31,14 +31,51 @@
 		});
 
 */
-module.exports = function( qs, cb ) {
+
+// https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach
+if (window.NodeList && !NodeList.prototype.forEach) {
+    NodeList.prototype.forEach = function (callback, thisArg) {
+        thisArg = thisArg || window;
+        for (var i = 0; i < this.length; i++) {
+            callback.call(thisArg, this[i], i, this);
+        }
+    };
+}
+
+const _doit = ( qs, cb ) => {
 
 	var nodeList = ( typeof qs === 'string' ) ? document.querySelectorAll(qs) : qs;
 
-	[].forEach.call( nodeList, function(el, i) {
-		cb( el, i );
-	});
+	if ( nodeList instanceof NodeList ) {
+		nodeList.forEach( function(el, i, list) {
+			cb( el, i, list );
+		});	
+	} else {
+		cb( nodeList, 0, nodeList );
+	}
 
 	return nodeList;
+
+};
+
+module.exports = function( qs, cb ) {
+
+	
+	if ( Array.isArray( qs ) ) {
+
+		let chunks = [];
+
+		qs.forEach( ( item ) => {
+			chunks.push( _doit( item, cb ) ); 
+		});
+
+		return chunks;
+
+	} else {
+		return _doit( qs, cb );	
+	}
+	
+
+	
 };
 
